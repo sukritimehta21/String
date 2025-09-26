@@ -1,0 +1,29 @@
+ global _start ;must be declared
+2 
+3 section .text
+4 _start: ;tell linker entry point
+5 mov ecx, len
+6 mov esi, s1
+7 mov edi, s2
+8 
+9 loop_here:
+10 lodsb
+11 or al, 20h
+12 stosb
+13 loop loop_here
+14 cld
+15 rep movsb
+16 mov edx,20 ;message length
+17 mov ecx,s2 ;message to write
+18 mov ebx,1 ;file descriptor (stdout)
+19 mov eax,4 ;system call number (sys_write)
+20 int 0x80 ;call kernel
+21 mov eax,1 ;system call number (sys_exit)
+22 int 0x80 ;call kernel
+23 
+24 section .data
+25 s1 db 'HELLO, WORLD', 0 ;source
+26 len equ $-s1
+27 
+28 section .bss
+29 s2 resb 20
